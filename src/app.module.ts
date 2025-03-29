@@ -30,7 +30,7 @@ import { BackupModule } from './backup/backup.module';
 
 
 @Module({
-  
+
   imports: [
     ConfigModule.forRoot(),
     MailerModule.forRoot({
@@ -52,17 +52,14 @@ import { BackupModule } from './backup/backup.module';
           strict: true,
         },
       },
-      
+
     }),
     TypeOrmModule.forRoot({
-      type: 'postgres', 
-      host: process.env.PG_HOST || 'localhost', 
-      port: parseInt(process.env.PG_PORT, 10) || 5432, 
-      username: process.env.PG_USER || 'your_username',
-      password: process.env.PG_PASSWORD || 'your_password', 
-      database: process.env.PG_DB || 'your_database_name', 
-      entities: [Users, Answers, AudioGuesses, DragDropAnswers, Questions, Quizzes, Results, Classes, Subjects],
-      synchronize: true,
+      type: 'postgres',
+      url: process.env.DATABASE_URL, // Dùng biến DATABASE_URL của Railway
+      ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
+      autoLoadEntities: true,
+      synchronize: true, // Chỉ bật trên môi trường dev, tắt trên production
     }),
     UsersModule,
     QuizzesModule,
@@ -79,15 +76,15 @@ import { BackupModule } from './backup/backup.module';
       signOptions: { expiresIn: '60m' }, // Tùy chỉnh thời gian hết hạn JWT
     }),
     BackupModule,
-    
-  
+
+
   ],
-  
+
   providers: [],
-  
+
   controllers: [],
-  
- 
+
+
 
 })
 export class AppModule { }
