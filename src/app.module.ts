@@ -56,13 +56,12 @@ import { BackupModule } from './backup/backup.module';
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: process.env.PG_HOST || 'localhost',
-      port: parseInt(process.env.PG_PORT, 10) || 5432,
-      username: process.env.PG_USER || 'your_username',
-      password: process.env.PG_PASSWORD || 'your_password',
-      database: process.env.PG_DB || 'your_database_name',
-      entities: [Users, Answers, AudioGuesses, DragDropAnswers, Questions, Quizzes, Results, Classes, Subjects],
+      url: process.env.DATABASE_URL, // Dùng DATABASE_URL thay vì từng biến riêng lẻ
+      autoLoadEntities: true,
       synchronize: true,
+      ssl: {
+        rejectUnauthorized: false, // Cần thiết nếu Railway yêu cầu kết nối SSL
+      },
     }),
     UsersModule,
     QuizzesModule,
